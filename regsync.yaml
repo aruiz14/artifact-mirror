@@ -5579,6 +5579,9 @@ sync:
 - source: library/busybox:1.37.0
   target: docker.io/rancher/mirrored-library-busybox:1.37.0
   type: image
+- source: library/busybox:1.38.0
+  target: docker.io/rancher/mirrored-library-busybox:1.38.0
+  type: image
 - source: library/busybox:1.31.1
   target: registry.suse.com/rancher/mirrored-library-busybox:1.31.1
   type: image
@@ -5594,6 +5597,9 @@ sync:
 - source: library/busybox:1.37.0
   target: registry.suse.com/rancher/mirrored-library-busybox:1.37.0
   type: image
+- source: library/busybox:1.38.0
+  target: registry.suse.com/rancher/mirrored-library-busybox:1.38.0
+  type: image
 - source: library/busybox:1.31.1
   target: stgregistry.suse.com/rancher/mirrored-library-busybox:1.31.1
   type: image
@@ -5608,6 +5614,9 @@ sync:
   type: image
 - source: library/busybox:1.37.0
   target: stgregistry.suse.com/rancher/mirrored-library-busybox:1.37.0
+  type: image
+- source: library/busybox:1.38.0
+  target: stgregistry.suse.com/rancher/mirrored-library-busybox:1.38.0
   type: image
 - source: library/nginx:1.19.2-alpine
   target: docker.io/rancher/library-nginx:1.19.2-alpine
