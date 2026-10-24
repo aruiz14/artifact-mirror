@@ -2625,6 +2625,7 @@ Artifacts:
   - v1.20.1
   - v1.20.2
   - v1.20.3
+  - v1.20.4
 - SourceArtifact: quay.io/cilium/hubble-ui
   Tags:
   - v0.10.0
