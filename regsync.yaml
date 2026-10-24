@@ -17564,6 +17564,9 @@ sync:
 - source: quay.io/cilium/cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
   target: docker.io/rancher/mirrored-cilium-cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
   type: image
+- source: quay.io/cilium/cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+  target: docker.io/rancher/mirrored-cilium-cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+  type: image
 - source: quay.io/cilium/cilium-envoy:v1.25.10-f71a313bd0daee41470af31ce6ea20c750fe35dd
   target: registry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.25.10-f71a313bd0daee41470af31ce6ea20c750fe35dd
   type: image
@@ -17693,6 +17696,9 @@ sync:
 - source: quay.io/cilium/cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
   target: registry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
   type: image
+- source: quay.io/cilium/cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+  target: registry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+  type: image
 - source: quay.io/cilium/cilium-envoy:v1.25.10-f71a313bd0daee41470af31ce6ea20c750fe35dd
   target: stgregistry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.25.10-f71a313bd0daee41470af31ce6ea20c750fe35dd
   type: image
@@ -17821,6 +17827,9 @@ sync:
   type: image
 - source: quay.io/cilium/cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
   target: stgregistry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.38.6-1791537840-00e749f11f69334c625e53fc1ce2fc6c7f34a51f
+  type: image
+- source: quay.io/cilium/cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
+  target: stgregistry.suse.com/rancher/mirrored-cilium-cilium-envoy:v1.39.5-1792733054-8c73b2816bc8239e27f1fd53b271884688137459
   type: image
 - source: quay.io/cilium/cilium-etcd-operator:v2.0.7
   target: docker.io/rancher/mirrored-cilium-cilium-etcd-operator:v2.0.7
