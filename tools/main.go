@@ -421,10 +421,10 @@ func dockerHubRepoExists(namespace, repo string) (bool, error) {
 	}
 	defer res.Body.Close()
 
-	switch {
-	case res.StatusCode == http.StatusOK:
+	switch res.StatusCode {
+	case http.StatusOK:
 		return true, nil
-	case res.StatusCode == http.StatusNotFound:
+	case http.StatusNotFound:
 		return false, nil
 	default:
 		return false, fmt.Errorf("unexpected status code: %d", res.StatusCode)
