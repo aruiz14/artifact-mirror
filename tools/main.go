@@ -419,7 +419,7 @@ func dockerHubRepoExists(namespace, repo string) (bool, error) {
 	if err != nil {
 		return false, err
 	}
-	defer res.Body.Close()
+	defer res.Body.Close() //nolint:errcheck
 
 	switch res.StatusCode {
 	case http.StatusOK:
