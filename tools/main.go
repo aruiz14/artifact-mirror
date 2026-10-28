@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -388,6 +389,16 @@ func validateDockerHubRepoExists(errs *[]error, newConfigYaml *config.Config) {
 		newArtifacts = append(newArtifacts, newArtifact)
 	}
 
+	// Listing all repositories requires authenticated requests
+	var existingRepositories map[string]struct{}
+	if os.Getenv("DOCKER_PASSWORD") != "" {
+		existingRepositories, err = fetchDockerHubRepositories()
+		if err != nil {
+			*errs = append(*errs, fmt.Errorf("failed to fetch dockerhub repositories: %w", err))
+			return
+		}
+	}
+
 	seen := map[string]struct{}{}
 	for _, newArtifact := range newArtifacts {
 		targetArtifactName := newArtifact.TargetArtifactName()
@@ -397,12 +408,74 @@ func validateDockerHubRepoExists(errs *[]error, newConfigYaml *config.Config) {
 		}
 		seen[targetArtifactName] = struct{}{}
 
+		if existingRepositories != nil {
+			_, repoExists := existingRepositories[targetArtifactName]
+			if !repoExists {
+				*errs = append(*errs, fmt.Errorf("repository rancher/%s does not exist on dockerhub", targetArtifactName))
+			}
+			continue
+		}
+
+		// fallback to individual requests if credentials were not available
 		if repoExists, err := dockerHubRepoExists(namespace, targetArtifactName); err != nil {
 			*errs = append(*errs, fmt.Errorf("checking existence of repository %s/%s dockerhub", namespace, targetArtifactName))
 		} else if !repoExists {
 			*errs = append(*errs, fmt.Errorf("repository %s/%s does not exist on dockerhub", namespace, targetArtifactName))
 		}
 	}
+}
+
+func fetchDockerHubRepositories() (map[string]struct{}, error) {
+	d := autoupdate.DockerHub{}
+	token, err := d.GetDockerAuthToken()
+	if err != nil {
+		return nil, fmt.Errorf("failed to create token: %w", err)
+	}
+
+	type DockerAPIResponseRepository struct {
+		Name string `json:"name"`
+	}
+	type DockerAPIResponse struct {
+		Next    string                        `json:"next"`
+		Results []DockerAPIResponseRepository `json:"results"`
+	}
+
+	client := &http.Client{
+		Timeout: 30 * time.Second,
+	}
+	repos := map[string]struct{}{}
+	nextURL := "https://hub.docker.com/v2/namespaces/rancher/repositories?page_size=100"
+	for nextURL != "" {
+		req, err := http.NewRequest("GET", nextURL, nil)
+		if err != nil {
+			return nil, fmt.Errorf("failed to create request: %w", err)
+		}
+		req.Header.Set("Authorization", "Bearer "+token)
+		resp, err := client.Do(req)
+		if err != nil {
+			return nil, fmt.Errorf("request failed: %w", err)
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			return nil, fmt.Errorf("received non-200 status code: %d", resp.StatusCode)
+		}
+
+		var apiResponse DockerAPIResponse
+		decoder := json.NewDecoder(resp.Body)
+		if err := decoder.Decode(&apiResponse); err != nil {
+			return nil, fmt.Errorf("failed to decode response: %w", err)
+		}
+
+		for _, repo := range apiResponse.Results {
+			repos[repo.Name] = struct{}{}
+		}
+
+		// The URL for the next iteration is the 'next' field from the current response.
+		// If 'next' is an empty string or null, the loop will terminate.
+		nextURL = apiResponse.Next
+	}
+
+	return repos, nil
 }
 
 func dockerHubRepoExists(namespace, repo string) (bool, error) {
